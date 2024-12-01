@@ -29,9 +29,10 @@ export function part2(data) {
 
 function parse(data) {
     const lines = data.split('\n').filter((x) => x);
-    const pairs = lines.map((line) => line.split(' ').filter((x) => x));
+    const pairs = lines.map((line) => line.split(/\s+/).map(Number));
 
-    const a = pairs.map((pair) => parseInt(pair[0])).sort((a, b) => a - b);
-    const b = pairs.map((pair) => parseInt(pair[1])).sort((a, b) => a - b);
+    const a = pairs.map((pair) => pair[0]).sort((a, b) => a - b);
+    const b = pairs.map((pair) => pair[1]).sort((a, b) => a - b);
+
     return { a, b };
 }
