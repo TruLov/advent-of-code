@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const read_input_data = (day) => {
-  const input_path = join(__dirname, day, "js", "input.txt");
+  const input_path = join(__dirname, day, "input.txt");
   if (fs.existsSync(input_path)) {
     return fs.readFileSync(input_path, "utf-8"); // Read the file as a string
   } else {
@@ -33,16 +33,15 @@ program
     }
 
     const day = dayNumber.toString().padStart(2, "0");
-    const day_path = join(__dirname, day, "js", "index.js");
+    const day_path = join(__dirname, day, "main.js");
 
     if (!fs.existsSync(day_path)) {
       console.error(
-        `Day ${day} does not exist or is missing an index.js file.`
+        `Day ${day} does not exist or is missing an main.js file.`
       );
       process.exit(1);
     }
 
-    console.log(`Running Day ${day}...`);
     try {
       const day_module = await import(day_path);
       const input_data = read_input_data(day);
@@ -52,10 +51,10 @@ program
         typeof day_module.part2 === "function"
       ) {
         const result1 = day_module.part1(input_data);
-        console.log(`>> ${result1}\n`);
+        console.log(`${result1}`);
 
         const result2 = day_module.part2(input_data);
-        console.log(`>> ${result2}\n`);
+        console.log(`${result2}`);
       } else {
         console.error(
           `Day ${day} must export two functions: 'part1' and 'part2'.`

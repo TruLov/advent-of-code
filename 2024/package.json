@@ -12,5 +12,8 @@
   "description": "Advent of Code 2024 - JS",
   "dependencies": {
     "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.1"
   }
 }
