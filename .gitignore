@@ -1,3 +1,10 @@
-node_modules
+# aoc inputs
 input*.txt
 test*.txt
+
+# js
+node_modules
+
+# rs
+debug/
+target/
