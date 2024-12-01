@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
+
+	"2024/utils"
 )
 
 func main() {
@@ -51,7 +52,7 @@ func parse(data string) ([]int, []int, error) {
 		num1, err1 := strconv.Atoi(parts[0])
 		num2, err2 := strconv.Atoi(parts[1])
 		if err1 != nil || err2 != nil {
-			return nil, nil, fmt.Errorf("invalid numbers in line: ", line)
+			return nil, nil, fmt.Errorf("invalid numbers in line: %s", line)
 		}
 
 		a = append(a, num1)
@@ -68,7 +69,7 @@ func parse(data string) ([]int, []int, error) {
 func part1(a []int, b []int) int {
 	result := 0
 	for i := 0; i < len(a); i++ {
-		result += int(math.Abs(float64(a[i] - b[i])))
+		result += utils.Abs(a[i] - b[i])
 	}
 
 	return result
@@ -87,4 +88,11 @@ func part2(a []int, b []int) int {
 	}
 
 	return result
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
