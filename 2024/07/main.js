@@ -14,7 +14,7 @@ export function part1(data) {
 export function part2(data) {
     return (
         parseInput(data)
-            .filter(({ nums, res }) => is_safe(nums, res))
+            .filter(({ nums, res }) => is_safe2(nums, res))
             // .filter(({ nums, res }) => is_safe_dyn(nums, res, [add, mul, con]))
             .reduce((acc, { res }) => acc + res, 0)
     );
@@ -31,7 +31,9 @@ const is_safe2 = (nums, res, i = 0, current = nums[0]) => {
     return (
         is_safe2(nums, res, i + 1, current + next) ||
         is_safe2(nums, res, i + 1, current * next) ||
-        is_safe2(nums, res, i + 1, parseInt(`${current}${next}`))
+        // WTF?
+        is_safe2(nums, res, i + 1, current * Math.pow(10, Math.floor(Math.log10(next) + 1)) + next)
+        // is_safe2(nums, res, i + 1, parseInt(`${current}${next}`))
     );
 };
 
