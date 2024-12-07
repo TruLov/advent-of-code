@@ -43,17 +43,16 @@ program
         console.log(`Starting benchmarks for Day ${day}...`);
 
         if (typeof module.part1 === 'function' && typeof module.part2 === 'function') {
-            const iterations = 100;
+            const iterations = 10;
             const result1_micro = micro_bench(iterations, module.part1, input);
             console.log(`avarage time part 1: ${result1_micro} ms`);
             const result2_micro = micro_bench(iterations, module.part2, input);
             console.log(`avarage time part 2: ${result2_micro} ms`);
-            
+
             const result1_iqr = iqr_bench(iterations, module.part1, input);
             console.log(`iqr bench part 1:    ${result1_iqr} ms`);
             const result2_iqr = iqr_bench(iterations, module.part2, input);
             console.log(`iqr bench part 2:    ${result2_iqr} ms`);
-            
         } else {
             program.error(`Day ${day} must export two functions: 'part1' and 'part2'.`);
         }
@@ -90,7 +89,7 @@ async function read_day(day_path) {
         const module = await import(module_path);
         return { module, input };
     } catch (e) {
-        program.error(`Failed to read inputs for Day ${day}: ${err.message}`, {
+        program.error(`Failed to read inputs for path ${day_path}/'main.js': ${e.message}`, {
             exitCode: 1,
             code: 'aoc.runtime_error',
         });
@@ -102,7 +101,7 @@ function read_input_data(day_path) {
     if (fs.existsSync(input_path)) {
         return fs.readFileSync(input_path, 'utf-8');
     } else {
-        program.error(`Input file for Day ${day} is missing.`, {
+        program.error(`Input file ${day_path}/'input.txt' is missing.`, {
             exitCode: 1,
             code: 'aoc.file_not_found',
         });
