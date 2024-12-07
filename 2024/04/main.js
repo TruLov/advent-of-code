@@ -62,7 +62,7 @@ export function part1(data) {
 
             if (element === 'X') {
                 const words = getWords(grid, x, y);
-                const count = words.filter((word) => word === 'XMAS').length;
+                const count = words.filter((word) => word === 'MAS').length;
                 result += count;
             }
         }
@@ -82,7 +82,7 @@ export function part2(data) {
         for (let x = 0; x < row.length; x++) {
             const element = row[x];
             if (element === 'A') {
-				const directions = [
+                const directions = [
                     [
                         [-1, 1],
                         [1, -1],
@@ -91,12 +91,12 @@ export function part2(data) {
                         [1, 1],
                         [-1, -1],
                     ],
-                ]
+                ];
                 const words = getWords(grid, x, y, directions);
-                const count = words.filter((word) => word === 'XSM' || word === 'XMS').length;
-				if(count === 2) {
-					result++;
-				}
+                const count = words.filter((word) => word === 'SM' || word === 'MS').length;
+                if (count === 2) {
+                    result++;
+                }
             }
         }
     }
@@ -108,7 +108,7 @@ function getWords(grid, x, y, directions = DIRECTIONS) {
     let words = [];
 
     for (const direction of directions) {
-        let word = 'X';
+        let word = '';
 
         for (const [dx, dy] of direction) {
             const newX = x + dx;

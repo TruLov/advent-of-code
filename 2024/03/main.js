@@ -13,9 +13,9 @@ export function part1(data) {
             const a = Number(groups[1]);
             const b = Number(groups[2]);
 
-            if (!isNaN(a) && !isNaN(b)) {
-                sum += a * b;
-            }
+            // if (!isNaN(a) && !isNaN(b)) {
+            sum += a * b;
+            // }
         }
     }
 
@@ -47,9 +47,10 @@ export function part2(data) {
                 const nums = instruction_group[2].split(',');
                 const a = Number(nums[0]);
                 const b = Number(nums[1]);
-                if (!isNaN(a) && !isNaN(b)) {
-                    sum += a * b;
-                }
+
+                // if (!isNaN(a) && !isNaN(b)) {
+                sum += a * b;
+                // }
                 break;
         }
     }
