@@ -1,3 +1,5 @@
+import { concatenate } from '../utils/integers.js';
+
 const add = (a, b) => a + b;
 const mul = (a, b) => a * b;
 const con = (a, b) => parseInt(`${a}${b}`);
@@ -31,9 +33,7 @@ const is_safe2 = (nums, res, i = 0, current = nums[0]) => {
     return (
         is_safe2(nums, res, i + 1, current + next) ||
         is_safe2(nums, res, i + 1, current * next) ||
-        // WTF?
-        is_safe2(nums, res, i + 1, current * Math.pow(10, Math.floor(Math.log10(next) + 1)) + next)
-        // is_safe2(nums, res, i + 1, parseInt(`${current}${next}`))
+        is_safe2(nums, res, i + 1, concatenate(current, next))
     );
 };
 
