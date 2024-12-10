@@ -6,6 +6,7 @@
   "semi": true,
   "arrowParens": "always",
   "singleQuote": true,
+  "quoteProps": "consistent",
   "bracketSpacing": true,
   "overrides": [
     {
