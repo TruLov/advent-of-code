@@ -44,22 +44,6 @@ export function part1(data) {
     return total;
 }
 
-function parse(data) {
-    const grid = data
-        .trim()
-        .split('\n')
-        .map((row) => row.split(''));
-    const rows = grid.length;
-    const cols = grid[0].length;
-    const is_oob = (x, y) => x < 0 || y < 0 || x >= cols || y >= rows;
-    return {
-        grid,
-        cols,
-        rows,
-        is_oob,
-    };
-}
-
 export function part2(data) {
     const { grid, cols, rows, is_oob } = parse(data);
     const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
@@ -69,21 +53,20 @@ export function part2(data) {
     // find all 'not visited' patches
     for (let y = 0; y < grid.length; y++) {
         for (let x = 0; x < grid[y].length; x++) {
-            const name = `${x},${y}`;
             if (visited[y][x]) continue;
 
             // found new area
             visited[y][x] = true;
+            const type = grid[y][x];
 
             const edge_map = new Map();
-            const type = grid[y][x];
-            const patch_area = new Set();
-            patch_area.add(`${x},${y}`);
+            let area = 0;
 
             // bfs
             const queue = [[x, y]];
             while (queue.length) {
                 const [px, py] = queue.shift();
+                area++;
 
                 [
                     [px, py - 1, 'up'],
@@ -91,7 +74,6 @@ export function part2(data) {
                     [px - 1, py, 'left'],
                     [px + 1, py, 'right'],
                 ]
-                    .filter(([dx, dy]) => !patch_area.has(`${dx},${dy}`))
                     .forEach(([dx, dy, dir]) => {
                         if (is_oob(dx, dy) || grid[dy][dx] !== type) {
                             if (dir === 'up' || dir === 'down') {
@@ -109,8 +91,7 @@ export function part2(data) {
                                 const edge = edge_map.get(name);
                                 edge.push(py);
                             }
-                        } else {
-                            patch_area.add(`${dx},${dy}`);
+                        } else if (!visited[dy][dx]){
                             visited[dy][dx] = true;
                             queue.push([dx, dy]);
                         }
@@ -129,10 +110,25 @@ export function part2(data) {
                 sides += group_count;
             });
 
-            const price = patch_area.size * sides;
-            total_price += price;
+            total_price += area * sides;
         }
     }
 
     return total_price;
+}
+
+function parse(data) {
+    const grid = data
+        .trim()
+        .split('\n')
+        .map((row) => row.split(''));
+    const rows = grid.length;
+    const cols = grid[0].length;
+    const is_oob = (x, y) => x < 0 || y < 0 || x >= cols || y >= rows;
+    return {
+        grid,
+        cols,
+        rows,
+        is_oob,
+    };
 }
