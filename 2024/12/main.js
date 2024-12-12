@@ -2,7 +2,7 @@ export function part1(data) {
     const { grid, cols, rows, is_oob } = parse(data);
     const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
 
-    const result = [];
+    let total = 0;
 
     // find all 'not visited' patches
     for (let y = 0; y < grid.length; y++) {
@@ -11,42 +11,37 @@ export function part1(data) {
 
             // Found new patch
             visited[y][x] = true;
-
-            let perimeter = 0;
             const type = grid[y][x];
-            const patch_area = new Set(); // local visited
-            patch_area.add(`${x},${y}`);
+
+            let area = 0;
+            let perimeter = 0;
 
             // bfs
             const queue = [[x, y]];
             while (queue.length) {
                 const [px, py] = queue.shift();
-                let fences = 0;
+                area++;
 
                 [
                     [px, py - 1],
                     [px, py + 1],
                     [px - 1, py],
                     [px + 1, py],
-                ]
-                    .filter(([dx, dy]) => !patch_area.has(`${dx},${dy}`))
-                    .forEach(([dx, dy]) => {
-                        if (is_oob(dx, dy) || grid[dy][dx] !== type) {
-                            ++fences;
-                        } else {
-                            patch_area.add(`${dx},${dy}`);
-                            visited[dy][dx] = true;
-                            queue.push([dx, dy]);
-                        }
-                    });
-                perimeter += fences;
+                ].forEach(([dx, dy]) => {
+                    if (is_oob(dx, dy) || grid[dy][dx] !== type) {
+                        ++perimeter;
+                    } else if (!visited[dy][dx]) {
+                        visited[dy][dx] = true;
+                        queue.push([dx, dy]);
+                    }
+                });
             }
 
-            result.push({ type: type, area: patch_area.size, perimeter });
+            total += area * perimeter;
         }
     }
 
-    return result.map(({ area, perimeter }) => area * perimeter).reduce((a, b) => a + b);
+    return total;
 }
 
 function parse(data) {
@@ -79,13 +74,13 @@ export function part2(data) {
 
             // found new area
             visited[y][x] = true;
-			
+
             const edge_map = new Map();
             const type = grid[y][x];
             const patch_area = new Set();
             patch_area.add(`${x},${y}`);
-			
-			// bfs
+
+            // bfs
             const queue = [[x, y]];
             while (queue.length) {
                 const [px, py] = queue.shift();
