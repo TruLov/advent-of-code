@@ -19,7 +19,7 @@ export function part1(data) {
             // bfs
             const queue = [[x, y]];
             while (queue.length) {
-                const [px, py] = queue.shift();
+                const [px, py] = queue.pop();
                 area++;
 
                 [
