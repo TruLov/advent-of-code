@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { dirname, join } from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { micro_bench, iqr_bench } from './utils/bench.js';
+import { warmup_jit, iqr_bench, measureMemoryNodeWithGC } from './utils/bench.js';
 
 const program = new Command();
 
@@ -43,16 +43,23 @@ program
         console.log(`Starting benchmarks for Day ${day}...`);
 
         if (typeof module.part1 === 'function' && typeof module.part2 === 'function') {
+            console.log('Warmup JIT...');
+            warmup_jit(module.part1, 10, input);
+            
             const iterations = 10;
-            const result1_micro = micro_bench(iterations, module.part1, input);
-            console.log(`avarage time part 1: ${result1_micro} ms`);
-            const result2_micro = micro_bench(iterations, module.part2, input);
-            console.log(`avarage time part 2: ${result2_micro} ms`);
-
+            console.log('\nStarting benchmarks...');
             const result1_iqr = iqr_bench(iterations, module.part1, input);
             console.log(`iqr bench part 1:    ${result1_iqr} ms`);
             const result2_iqr = iqr_bench(iterations, module.part2, input);
             console.log(`iqr bench part 2:    ${result2_iqr} ms`);
+
+            console.log('\nStarting memory benchmarks...');
+            const result1_mem = measureMemoryNodeWithGC(module.part1, input);
+            console.log(`Memory part 1:       ${result1_mem} kB`);
+            const result2_mem = measureMemoryNodeWithGC(module.part2, input);
+            console.log(`Memory part 2:       ${result2_mem} kB`);
+            
+
         } else {
             program.error(`Day ${day} must export two functions: 'part1' and 'part2'.`);
         }

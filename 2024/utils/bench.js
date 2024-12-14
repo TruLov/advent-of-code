@@ -39,6 +39,34 @@ export function iqr_bench(iterations, fn, ...args) {
     return avrg;
 }
 
+export function measureMemoryNode(fn, ...args) {
+    const before = process.memoryUsage().heapUsed;
+    fn(...args);
+    const after = process.memoryUsage().heapUsed;
+
+    return (after - before) / 1024; // kB
+}
+
+export function measureMemoryNodeWithGC(fn, ...args) {
+    if (typeof global.gc !== 'function') {
+        throw new Error("Garbage Collection is not exposed. Run with '--expose-gc'.");
+    }
+
+    global.gc();
+    const before = process.memoryUsage().heapUsed;
+    fn(...args);
+    global.gc();
+    const after = process.memoryUsage().heapUsed;
+
+    return (after - before) / 1024; // kB
+}
+
+export function warmup_jit(fn, n, ...args) {
+    for (let i = 0; i < n; i++) {
+        fn(...args);
+    }
+}
+
 function quantile(sorted_array, perc) {
     const pos = (sorted_array.length - 1) * perc;
     const base = Math.floor((sorted_array.length - 1) * perc);
