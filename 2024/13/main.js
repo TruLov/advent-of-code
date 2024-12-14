@@ -1,32 +1,44 @@
 export function part1(data) {
     const machines = parse(data);
-    return machines
-        .map(({ a, b, p }) => {
-            let min_pushes = Infinity;
-            let amin = 0;
-            let bmin = 0;
 
-            // brute force
-            for (let i = 0; i < 100; i++) {
-                for (let j = 0; j < 100; j++) {
-                    const x = i * a[0] + j * b[0];
-                    const y = i * a[1] + j * b[1];
-                    if (x === p[0] && y === p[1]) {
-                        const push_count = i + j;
-                        if (push_count < min_pushes) {
-                            min_pushes = push_count;
-                            amin = i;
-                            bmin = j;
-                        }
-                    }
-                }
-            }
-            return amin * 3 + bmin;
-        })
-        .reduce((a, b) => a + b, 0);
+    // a * ax + b * bx = px
+    // a * ay + b * by = py
+    const min_button_presses = machines.map(({ a: [ax, ay], b: [bx, by], p: [px, py] }) => {
+        const b = (ax * py - ay * px) / (ax * by - ay * bx);
+        const a = (px - b * bx) / ax;
+
+        if (a > 100 || b > 100) return 0;
+        if (!Number.isInteger(a) || !Number.isInteger(b)) return 0;
+        if (a * ax + b * bx !== px && a * ay + b * by !== py) return 0;
+
+        return a * 3 + b;
+    });
+    return min_button_presses.reduce((a, b) => a + b, 0);
 }
 
-function parse(data, factor = 1) {
+export function part2(data) {
+    const machines = parse(data);
+    const factor = 10_000_000_000_000;
+
+    const min_button_presses = machines.map(({ a: [ax, ay], b: [bx, by], p: [px, py] }) => {
+        px += factor;
+        py += factor;
+        const b = (ax * py - ay * px) / (ax * by - ay * bx);
+        const a = (px - b * bx) / ax;
+
+        if (!Number.isInteger(a) || !Number.isInteger(b)) {
+            return 0;
+        }
+        if (a * ax + b * bx !== px && a * ay + b * by !== py) {
+            return 0;
+        }
+
+        return a * 3 + b;
+    });
+    return min_button_presses.reduce((a, b) => a + b, 0);
+}
+
+function parse(data) {
     const machines_str = data
         .trim()
         .split('\n\n')
@@ -35,12 +47,8 @@ function parse(data, factor = 1) {
     return machines_str.map((m) => {
         const a = m[0].substring(12).split(', Y+').map(Number);
         const b = m[1].substring(12).split(', Y+').map(Number);
-        const p = m[2]
-            .substring(9)
-            .split(', Y=')
-            .map((n) => Number(n) * factor);
+        const p = m[2].substring(9).split(', Y=').map(Number);
 
         return { a, b, p };
     });
 }
-
