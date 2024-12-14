@@ -3,8 +3,8 @@ export function part1(data) {
     return machines
         .map(({ a, b, p }) => {
             let min_pushes = Infinity;
-            let a = 0;
-            let b = 0;
+            let amin = 0;
+            let bmin = 0;
 
             // brute force
             for (let i = 0; i < 100; i++) {
@@ -15,13 +15,13 @@ export function part1(data) {
                         const push_count = i + j;
                         if (push_count < min_pushes) {
                             min_pushes = push_count;
-                            a = i;
-                            b = j;
+                            amin = i;
+                            bmin = j;
                         }
                     }
                 }
             }
-            return a * 3 + b;
+            return amin * 3 + bmin;
         })
         .reduce((a, b) => a + b, 0);
 }
