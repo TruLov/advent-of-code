@@ -17,7 +17,7 @@ js:
 		echo "Skipped: $$dir/input.txt (already exists)"; \
 	fi; \
 	if [ ! -f $$dir/main.js ]; then \
-		echo "export function part1(data) {\n\n\treturn result;\n}\n\nexport function part2(data) {\n\n\treturn result;\n}" > $$dir/main.js; \
+		echo "export function part1(data) {\n\n\treturn result;\n}\n\nexport function part2(data) {\n\n\treturn -1;\n}" > $$dir/main.js; \
 		echo "Created: $$dir/main.js"; \
 	else \
 		echo "Skipped: $$dir/main.js (already exists)"; \
