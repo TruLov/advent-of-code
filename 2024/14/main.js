@@ -66,7 +66,7 @@ export function part2(data) {
 
                 console.log(`\npart1:`);
                 console.log(vizualize(result, false));
-				console.log(`-----------------------------\n`);
+                console.log(`-----------------------------\n`);
 
                 return i;
             }
