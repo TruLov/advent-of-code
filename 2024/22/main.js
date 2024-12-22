@@ -1,10 +1,9 @@
-const mix = (n, m) => n ^ m;
-const prune = (n) => n % 16777216n;
-const step1 = (n) => prune(mix(n, n * 64n));
-const step2 = (n) => prune(mix(n, BigInt(Math.floor(Number(n / 32n)))));
-const step3 = (n) => prune(mix(n, n * 2048n));
-
-const gen_secret = (i) => step3(step2(step1(BigInt(i))));
+const gen_secret = (i) => {
+    let n = BigInt(i);
+    n = (n ^ (n * 64n)) & 0xffffffn;
+    n ^= n / 32n;
+    return (n ^ (n * 2048n)) & 0xffffffn;
+};
 
 export function part1(data) {
     const lines = data.trim().split('\n').map(Number);
@@ -43,6 +42,11 @@ export function part2(data) {
         for (let i = 0; i < list.length - 4; i++) {
             const frame = list.slice(i, i + 4);
             const key = frame.map(([_, diff]) => diff).join(',');
+
+            // if (key === '-2,1,-1,3') {
+            //     console.log(frame);
+            // }
+
             const value = frame.slice(-1)[0][0];
 
             if (!decision_map.has(key)) {

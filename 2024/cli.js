@@ -44,7 +44,7 @@ program
 
         if (typeof module.part1 === 'function' && typeof module.part2 === 'function') {
             console.log('Warmup JIT...');
-            warmup_jit(module.part1, 10, input);
+            warmup_jit(module.part1, 3, input);
             
             const iterations = 10;
             console.log('\nStarting benchmarks...');
@@ -53,11 +53,11 @@ program
             const result2_iqr = iqr_bench(iterations, module.part2, input);
             console.log(`iqr bench part 2:    ${result2_iqr} ms`);
 
-            console.log('\nStarting memory benchmarks...');
-            const result1_mem = measureMemoryNodeWithGC(module.part1, input);
-            console.log(`Memory part 1:       ${result1_mem} kB`);
-            const result2_mem = measureMemoryNodeWithGC(module.part2, input);
-            console.log(`Memory part 2:       ${result2_mem} kB`);
+            // console.log('\nStarting memory benchmarks...');
+            // const result1_mem = measureMemoryNodeWithGC(module.part1, input);
+            // console.log(`Memory part 1:       ${result1_mem} kB`);
+            // const result2_mem = measureMemoryNodeWithGC(module.part2, input);
+            // console.log(`Memory part 2:       ${result2_mem} kB`);
             
 
         } else {
