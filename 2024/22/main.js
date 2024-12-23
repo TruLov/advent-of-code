@@ -43,10 +43,6 @@ export function part2(data) {
             const frame = list.slice(i, i + 4);
             const key = frame.map(([_, diff]) => diff).join(',');
 
-            // if (key === '-2,1,-1,3') {
-            //     console.log(frame);
-            // }
-
             const value = frame.slice(-1)[0][0];
 
             if (!decision_map.has(key)) {
@@ -65,7 +61,6 @@ export function part2(data) {
         const quersumme = value.split('').reduce((acc, curr) => acc + Number(curr), 0);
         decision_map.set(key, quersumme);
     });
-    // sort the map by value
     const sorted = [...decision_map.entries()].sort((a, b) => a[1] - b[1]);
 
     return sorted.pop()[1];
