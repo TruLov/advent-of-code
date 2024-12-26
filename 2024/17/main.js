@@ -51,17 +51,14 @@ function evaluate(a, b, c, program) {
     };
     const stdout = [];
     const instructions = {
-        0: (op) => (a = a >> combo(op)),
+        // 0: (op) => (a = a >> combo(op)),
+		// ???
+        0: (op) => (a = Math.floor(a / 2 ** combo(op))),
         1: (op) => (b ^= op),
         2: (op) => (b = combo(op) & 7),
         3: (op) => a !== 0 && (i = op - 2),
         4: () => (b ^= c),
-        5: (op) => {
-            const r = combo(op) & 7;
-            stdout.push(r);
-            // print binary representation of the number a
-            console.log(a.toString(2).padStart(3, '0'));
-        },
+        5: (op) => stdout.push(combo(op) & 7),
         6: (op) => (b = a >> combo(op)),
         7: (op) => (c = a >> combo(op)),
     };
@@ -73,34 +70,5 @@ function evaluate(a, b, c, program) {
         i += 2;
     }
 
-    return stdout.join(','); // Join the output as a comma-separated string
+    return stdout.join(','); 
 }
-
-// function part21(data) {
-//     const [r, p] = data.trim().split('\n\n');
-//     const [_, b, c] = r
-//         .split('\n')
-//         .map((x) => x.split(': ')[1])
-//         .map(Number);
-//     const program = p.split(': ')[1].split(',').map(Number);
-
-//     const queue = [];
-//     queue.push({ result: '', length: 0 });
-//     while (queue.length) {
-//         const { result, length } = queue.shift();
-//         if (length === program.length) {
-//             return parseInt(result, 2);
-//         }
-
-//         const from = parseInt(`${result}000`, 2);
-//         const to = parseInt(`${result}111`, 2);
-//         const target = program.slice(-1 * (length + 1)).join(',');
-
-//         for (let a = from; a <= to; a++) {
-//             const output = evaluate(a, b, c, program);
-//             if (output === target) {
-//                 queue.push({ result: a.toString(2), length: length + 1 });
-//             }
-//         }
-//     }
-// }
