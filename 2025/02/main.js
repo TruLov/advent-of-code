@@ -1,68 +1,60 @@
 export function part1(data) {
+  const count_digits = (n) => Math.floor(Math.log10(Math.abs(n))) + 1;
+
   const result = parse(data)
-    .filter((n) => `${n}`.length % 2 === 0)
-    .map((n) => [
-      Number(String(n).slice(0, String(n).length / 2)),
-      Number(String(n).slice(String(n).length / 2)),
-    ])
-    .filter(([a, b]) => a === b)
-    .map(([a, b]) => Number(`${a}${b}`))
-    .reduce((acc, cur) => acc + cur, 0);
+    .filter((n) => count_digits(n) % 2 === 0)
+    .map((n) => {
+      const divisor = 10 ** (count_digits(n) / 2);
+      return [Math.floor(n / divisor), n % divisor];
+    })
+    .filter(([left, right]) => left === right)
+    .reduce(
+      (sum, [left, right]) => sum + left * 10 ** count_digits(right) + right,
+      0
+    );
 
   return result;
 }
 
 export function part2(data) {
   const numbers = parse(data);
-  let pattern_matches = [];
-  for (const row of numbers) {
-    if (find_repeating_sequence(`${row}`)) {
-      pattern_matches.push(row);
-    }
-  }
-
-  return pattern_matches.reduce((a, b) => a + b, 0);
+  return numbers
+    .filter((n) => is_repeating_pattern(String(n)))
+    .reduce((sum, n) => sum + n, 0);
 }
 
-function find_repeating_sequence(s) {
-  const str_len = s.length;
+function is_repeating_pattern(s) {
+  const n = s.length;
+  if (n <= 1) return false;
+
   // helper array to store longest matching pattern
-  const sequence_checker_arr = new Array(str_len).fill(0);
+  const sequence_checker_arr = new Array(n).fill(0);
 
-  // move foreward checker_index
-  for (let checker_index = 1; checker_index < str_len; checker_index++) {
+  // move foreward right_idx
+  for (let right_idx = 1; right_idx < n; right_idx++) {
     // increases if found repeating pattern
-    let pattern_index = sequence_checker_arr[checker_index - 1];
+    let left_idx = sequence_checker_arr[right_idx - 1];
 
-    // if you have a mismatch, send back pattern_index to last match
-    while (pattern_index > 0 && s[checker_index] !== s[pattern_index]) {
-      pattern_index = sequence_checker_arr[pattern_index - 1];
+    // if you have a mismatch, send back left_idx to last match
+    while (left_idx > 0 && s[right_idx] !== s[left_idx]) {
+      left_idx = sequence_checker_arr[left_idx - 1];
     }
 
-    // else, increase pattern_index
-    if (s[checker_index] === s[pattern_index]) {
-      pattern_index++;
+    // else, increase left_idx
+    if (s[right_idx] === s[left_idx]) {
+      left_idx++;
     }
 
     // store found pattern in helper array
-    sequence_checker_arr[checker_index] = pattern_index;
+    sequence_checker_arr[right_idx] = left_idx;
   }
 
-  const longest_pattern_len = sequence_checker_arr[str_len - 1];
-  const smallest_repeating_pattern = str_len - longest_pattern_len;
+  const longest_pattern_len = sequence_checker_arr[n - 1];
+  const smallest_repeating_pattern = n - longest_pattern_len;
 
   const is_pattern =
-    smallest_repeating_pattern < str_len &&
-    str_len % smallest_repeating_pattern === 0;
+    smallest_repeating_pattern < n && n % smallest_repeating_pattern === 0;
   return is_pattern;
-  // if (is_pattern) {
-  //   return {
-  //     pattern: s.slice(0, smallest_repeating_pattern),
-  //     count: str_len / smallest_repeating_pattern,
-  //   };
-  // }
-
-  // return null;
 }
 
 function parse(data) {
